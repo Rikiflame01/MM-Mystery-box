@@ -4,11 +4,21 @@ using UnityEngine;
 public class BallRoller : MonoBehaviour
 {
     public Transform ball;
-    public Transform targetCup; 
-    public Transform targetEmpty; 
+    public Transform targetCup;
+    public Transform targetEmpty;
     public float rollDuration = 1f;
     public float rotateDuration = 0.5f;
-    public float liftHeight = 0.5f; 
+    public float liftHeight = 0.5f;
+
+    private Rigidbody ballRigidbody;
+    private Transform currentBallTarget;
+    private float positionTolerance = 0.01f;
+
+    private void Start()
+    {
+        ballRigidbody = ball.GetComponent<Rigidbody>();
+        currentBallTarget = targetEmpty; // Set the initial target to targetEmpty
+    }
 
     public void StartRolling()
     {
@@ -17,6 +27,8 @@ public class BallRoller : MonoBehaviour
 
     private IEnumerator RollBall()
     {
+        DisableRigidbody();
+
         Vector3 startPosition = ball.position;
         Vector3 cupStartPosition = targetCup.position;
         Vector3 cupLiftedPosition = cupStartPosition + Vector3.up * liftHeight;
@@ -56,6 +68,32 @@ public class BallRoller : MonoBehaviour
         targetCup.position = cupStartPosition;
         targetCup.rotation = cupStartRotation;
 
+        EnableRigidbody();
         GameStateManager.Instance.ChangeState(GameState.PlayerSelecting);
+    }
+
+    private void DisableRigidbody()
+    {
+        if (ballRigidbody != null)
+        {
+            ballRigidbody.isKinematic = true;
+        }
+    }
+
+    private void EnableRigidbody()
+    {
+        if (ballRigidbody != null)
+        {
+            ballRigidbody.isKinematic = false;
+        }
+    }
+
+    private void CheckBallPosition()
+    {
+        if (ball != null && Vector3.Distance(ball.position, currentBallTarget.position) > positionTolerance)
+        {
+            Debug.LogWarning("Ball position is incorrect, resetting to target position.");
+            ball.position = currentBallTarget.position;
+        }
     }
 }

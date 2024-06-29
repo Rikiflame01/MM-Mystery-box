@@ -2,18 +2,21 @@ using UnityEngine;
 
 public class ClickableObject : MonoBehaviour
 {
-    public Transform ballChecker;
+    public Transform ballChecker; // Reference to the empty object that checks for the ball
+    private GameManager gameManager;
+
+    private void Start()
+    {
+        gameManager = FindObjectOfType<GameManager>();
+    }
 
     private void OnMouseDown()
     {
         if (GameStateManager.Instance != null)
         {
-            if (GameStateManager.Instance.currentState == GameState.Default)
+            if (GameStateManager.Instance.currentState == GameState.PlayerSelecting)
             {
-                GameStateManager.Instance.ChangeState(GameState.Playing);
-            }
-            else if (GameStateManager.Instance.currentState == GameState.PlayerSelecting)
-            {
+                // Handle the player's selection
                 HandleSelection();
             }
         }
@@ -26,12 +29,12 @@ public class ClickableObject : MonoBehaviour
         if (hasBall)
         {
             Debug.Log("Player has selected the correct cup: " + gameObject.name);
-            GameStateManager.Instance.ChangeState(GameState.PlayerCorrect);
+            gameManager.SetSelection(true);
         }
         else
         {
             Debug.Log("Player has selected the wrong cup: " + gameObject.name);
-            GameStateManager.Instance.ChangeState(GameState.PlayerIncorrect);
+            gameManager.SetSelection(false);
         }
     }
 
