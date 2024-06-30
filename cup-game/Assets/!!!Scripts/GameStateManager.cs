@@ -34,7 +34,6 @@ public class GameStateManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -62,32 +61,25 @@ public class GameStateManager : MonoBehaviour
         {
             case GameState.Default:
                 OnDefaultState?.Invoke();
-                Debug.Log("State: Default");
                 break;
             case GameState.Playing:
                 OnPlayingState?.Invoke();
-                Debug.Log("State: Playing");
                 OnRollBall?.Invoke();
                 break;
             case GameState.PlayerCorrect:
                 OnPlayerCorrectState?.Invoke();
-                Debug.Log("State: Player Correct");
                 break;
             case GameState.PlayerIncorrect:
                 OnPlayerIncorrectState?.Invoke();
-                Debug.Log("State: Player Incorrect");
                 break;
             case GameState.PlayerWon:
                 OnPlayerWonState?.Invoke();
-                Debug.Log("State: Player Won");
                 break;
             case GameState.PlayerLost:
                 OnPlayerLostState?.Invoke();
-                Debug.Log("State: Player Lost");
                 break;
             case GameState.PlayerSelecting:
                 OnPlayerSelectingState?.Invoke();
-                Debug.Log("State: Player Selecting");
                 OnShuffleCups?.Invoke();
                 break;
             default:

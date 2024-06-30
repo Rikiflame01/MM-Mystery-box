@@ -9,8 +9,8 @@ public class CupShuffler : MonoBehaviour
     public float shuffleDuration = 2f;
     public int shuffleCount = 3;
     public float shuffleSpeedMultiplier = 1f;
-    public Transform ball; // Reference to the ball
-    public Rigidbody ballRigidbody; // Reference to the ball's rigidbody
+    public Transform ball;
+    public Rigidbody ballRigidbody;
 
     private Rigidbody[] cupRigidbodies;
     private Quaternion[] initialRotations;
@@ -63,7 +63,6 @@ public class CupShuffler : MonoBehaviour
                 yield return StartCoroutine(MoveCup(cups[j], startPosition, startRotation, endPosition));
             }
 
-            // Update ball position frequently
             UpdateBallPosition();
         }
 
@@ -155,7 +154,7 @@ public class CupShuffler : MonoBehaviour
         {
             cup.position = Vector3.Lerp(startPosition, endPosition, timeElapsed / adjustedDuration);
             cup.rotation = startRotation;
-            UpdateBallPosition(); // Update ball position frequently
+            UpdateBallPosition();
             timeElapsed += Time.deltaTime;
             yield return null;
         }

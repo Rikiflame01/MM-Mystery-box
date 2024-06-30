@@ -17,7 +17,7 @@ public class BallRoller : MonoBehaviour
     private void Start()
     {
         ballRigidbody = ball.GetComponent<Rigidbody>();
-        currentBallTarget = targetEmpty; // Set the initial target to targetEmpty
+        currentBallTarget = targetEmpty;
     }
 
     public void StartRolling()
@@ -92,7 +92,6 @@ public class BallRoller : MonoBehaviour
     {
         if (ball != null && Vector3.Distance(ball.position, currentBallTarget.position) > positionTolerance)
         {
-            Debug.LogWarning("Ball position is incorrect, resetting to target position.");
             ball.position = currentBallTarget.position;
         }
     }

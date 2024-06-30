@@ -86,7 +86,7 @@ public class GameManager : MonoBehaviour
     {
         gameStateManager.ChangeState(GameState.Default);
         dialogueManager.StartDialogue(dialogues[currentRound]);
-        cupShuffler.ResetCupsToInitialPositions(); // Reset cups to initial positions at the start
+        cupShuffler.ResetCupsToInitialPositions();
     }
 
     public void ProgressGame()
@@ -104,7 +104,7 @@ public class GameManager : MonoBehaviour
                 {
                     if (currentRound == dialogues.Length / 2 - 1)
                     {
-                        EndGame(true); // End game if it was the final round
+                        EndGame(true);
                     }
                     else
                     {
@@ -120,7 +120,7 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                dialogueManager.DisplayMakeSelectionMessage(); // Display message to prompt the user to make a selection
+                dialogueManager.DisplayMakeSelectionMessage();
             }
         }
         else if (gameStateManager.currentState == GameState.PlayerCorrect)
@@ -135,7 +135,7 @@ public class GameManager : MonoBehaviour
                 currentRound++;
                 gameStateManager.ChangeState(GameState.Default);
                 SelectionMade = false;
-                dialogueManager.StartDialogue(dialogues[currentRound * 2]); // Start the next round's initial dialogue
+                dialogueManager.StartDialogue(dialogues[currentRound * 2]);
             }
         }
         else if (gameStateManager.currentState == GameState.PlayerIncorrect)
@@ -146,16 +146,15 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator StartPlayingStateDialogue()
     {
-        // Wait for shuffling to complete
-        yield return new WaitForSeconds(3f); // Adjust this duration based on your shuffling animation duration
-        dialogueManager.StartDialogue(dialogues[currentRound * 2 + 1]); // Start the selection phase dialogue
+        yield return new WaitForSeconds(3f);
+        dialogueManager.StartDialogue(dialogues[currentRound * 2 + 1]);
         gameStateManager.ChangeState(GameState.PlayerSelecting);
     }
 
     public void SetSelection(bool isCorrect)
     {
         if (SelectionMade)
-            return; // Ignore further selections
+            return;
 
         SelectionMade = true;
         isSelectionCorrect = isCorrect;
@@ -173,13 +172,12 @@ public class GameManager : MonoBehaviour
             dialogueManager.StartDialogue(new string[] { "How unfortunate. Or losing is the path to victory? But today, and for you, there is no mystery prize." });
         }
 
-        StartCoroutine(ReloadSceneAfterDelay(3f)); // Reload the scene after 3 seconds
+        StartCoroutine(ReturnToMenuAfterDelay(3f));
     }
 
-    private IEnumerator ReloadSceneAfterDelay(float delay)
+    private IEnumerator ReturnToMenuAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        cupShuffler.ResetCupsToInitialPositions(); // Reset cups to initial positions when the scene reloads
+        SceneManager.LoadScene("Menu");
     }
 }
