@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
     public GameStateManager gameStateManager;
     public DialogueManager dialogueManager;
     public CupShuffler cupShuffler;
+    public ItemSwapper itemSwapper; // Reference to ItemSwapper
 
     private int currentRound = 0;
     private int successfulGuesses = 0;
@@ -80,13 +81,24 @@ public class GameManager : MonoBehaviour
         gameStateManager = FindObjectOfType<GameStateManager>();
         dialogueManager = FindObjectOfType<DialogueManager>();
         cupShuffler = FindObjectOfType<CupShuffler>();
+        itemSwapper = FindObjectOfType<ItemSwapper>(); // Get reference to ItemSwapper
     }
 
     private void Start()
     {
         gameStateManager.ChangeState(GameState.Default);
-        dialogueManager.StartDialogue(dialogues[currentRound]);
+
+        if (currentRound >= 0 && currentRound < dialogues.Length)
+        {
+            dialogueManager.StartDialogue(dialogues[currentRound]);
+        }
+        else
+        {
+            Debug.LogError($"Invalid currentRound index: {currentRound}");
+        }
+
         cupShuffler.ResetCupsToInitialPositions();
+        UpdateBallVisibility();
     }
 
     public void ProgressGame()
@@ -135,19 +147,53 @@ public class GameManager : MonoBehaviour
                 currentRound++;
                 gameStateManager.ChangeState(GameState.Default);
                 SelectionMade = false;
-                dialogueManager.StartDialogue(dialogues[currentRound * 2]);
+
+                if (currentRound >= 0 && currentRound < dialogues.Length)
+                {
+                    dialogueManager.StartDialogue(dialogues[currentRound * 2]);
+                }
+                else
+                {
+                    Debug.LogError($"Invalid currentRound index: {currentRound}");
+                }
             }
         }
         else if (gameStateManager.currentState == GameState.PlayerIncorrect)
         {
             EndGame(false);
         }
+
+        UpdateBallVisibility();
+
+        if (currentRound == 1)
+        {
+            EventManager.TriggerSwapItem0With1();
+        }
+        else if (currentRound == 2)
+        {
+            EventManager.TriggerSwapItem1With2();
+        }
+        else if (currentRound == 3)
+        {
+            EventManager.TriggerSwapItem2With0();
+        }
+        else if (currentRound == 4)
+        {
+            EventManager.TriggerSwapItem0With4();
+        }
     }
 
     private IEnumerator StartPlayingStateDialogue()
     {
         yield return new WaitForSeconds(3f);
-        dialogueManager.StartDialogue(dialogues[currentRound * 2 + 1]);
+        if (currentRound * 2 + 1 < dialogues.Length)
+        {
+            dialogueManager.StartDialogue(dialogues[currentRound * 2 + 1]);
+        }
+        else
+        {
+            Debug.LogError($"Invalid currentRound * 2 + 1 index: {currentRound * 2 + 1}");
+        }
         gameStateManager.ChangeState(GameState.PlayerSelecting);
     }
 
@@ -179,5 +225,21 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         SceneManager.LoadScene("Menu");
+    }
+
+    private void UpdateBallVisibility()
+    {
+        // Ensure the ball is only visible in the relevant rounds
+        for (int i = 0; i < itemSwapper.items.Length; i++)
+        {
+            if (i == 0 || i == 3)
+            {
+                var meshRenderer = itemSwapper.items[i].GetComponent<MeshRenderer>();
+                if (meshRenderer != null)
+                {
+                    meshRenderer.enabled = currentRound == 0 || currentRound == 3;
+                }
+            }
+        }
     }
 }

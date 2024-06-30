@@ -6,17 +6,15 @@ public class BallRoller : MonoBehaviour
     public Transform ball;
     public Transform targetCup;
     public Transform targetEmpty;
-    public float rollDuration = 1f;
+    public float rollDuration = 0.7f;
     public float rotateDuration = 0.5f;
     public float liftHeight = 0.5f;
 
-    private Rigidbody ballRigidbody;
     private Transform currentBallTarget;
     private float positionTolerance = 0.01f;
 
     private void Start()
     {
-        ballRigidbody = ball.GetComponent<Rigidbody>();
         currentBallTarget = targetEmpty;
     }
 
@@ -27,7 +25,6 @@ public class BallRoller : MonoBehaviour
 
     private IEnumerator RollBall()
     {
-        DisableRigidbody();
 
         Vector3 startPosition = ball.position;
         Vector3 cupStartPosition = targetCup.position;
@@ -68,24 +65,7 @@ public class BallRoller : MonoBehaviour
         targetCup.position = cupStartPosition;
         targetCup.rotation = cupStartRotation;
 
-        EnableRigidbody();
         GameStateManager.Instance.ChangeState(GameState.PlayerSelecting);
-    }
-
-    private void DisableRigidbody()
-    {
-        if (ballRigidbody != null)
-        {
-            ballRigidbody.isKinematic = true;
-        }
-    }
-
-    private void EnableRigidbody()
-    {
-        if (ballRigidbody != null)
-        {
-            ballRigidbody.isKinematic = false;
-        }
     }
 
     private void CheckBallPosition()
