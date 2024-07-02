@@ -315,8 +315,8 @@ MonoBehaviour:
   - {fileID: 851737032}
   - {fileID: 1262786362}
   shuffleDuration: 3
-  shuffleCount: 5
-  shuffleSpeedMultiplier: 6
+  shuffleCount: 7
+  shuffleSpeedMultiplier: 4
   ball: {fileID: 0}
   ballRigidbody: {fileID: 0}
 --- !u!1001 &441736082

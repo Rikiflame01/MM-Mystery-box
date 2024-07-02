@@ -165,21 +165,20 @@ public class GameManager : MonoBehaviour
 
         UpdateBallVisibility();
 
-        if (currentRound == 1)
+        switch (currentRound)
         {
-            EventManager.TriggerSwapItem0With1();
-        }
-        else if (currentRound == 2)
-        {
-            EventManager.TriggerSwapItem1With2();
-        }
-        else if (currentRound == 3)
-        {
-            EventManager.TriggerSwapItem2With0();
-        }
-        else if (currentRound == 4)
-        {
-            EventManager.TriggerSwapItem0With4();
+            case 1:
+                EventManager.TriggerSwapItem0With1();
+                break;
+            case 2:
+                EventManager.TriggerSwapItem1With2();
+                break;
+            case 3:
+                EventManager.TriggerSwapItem2With0();
+                break;
+            case 4:
+                EventManager.TriggerSwapItem0With4();
+                break;
         }
     }
 
@@ -237,7 +236,7 @@ public class GameManager : MonoBehaviour
                 var meshRenderer = itemSwapper.items[i].GetComponent<MeshRenderer>();
                 if (meshRenderer != null)
                 {
-                    meshRenderer.enabled = currentRound == 0 || currentRound == 3;
+                    meshRenderer.enabled = (currentRound == 0 || currentRound == 3);
                 }
             }
         }
